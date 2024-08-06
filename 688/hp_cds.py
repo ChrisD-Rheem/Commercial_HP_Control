@@ -21,18 +21,29 @@ from econet_driver.econet_exceptions import ConfigError, CommPortError, ReadObjE
     WriteObjError, TerminateError
 from econet_driver.econet_system_config import ConfigFile
  
-TEST_CASE_NAME = "tc_xxxx"
+TEST_CASE_NAME = "hp_cds"
 TEST_CASE_VERSION = "01.00.00"
  
 #use the first def in case of prompt user needed
 #def tc_xxxx(bench_test, log_config, cmd_msg_que, response_que, econet_write_obj_que, econet_read_obj_que, kill_que, prompt_que):
 def tc_xxxx(bench_test, log_config, log_lock, response_que, econet_write_obj_que, econet_read_obj_que, kill_que):
     """
-     Test Case Requirement:
-    x.x.xxxx - Requirement Description here
+    Test Case Requirement:
+    ACHPC-SR-211 - Water Overflow/Drain Sense
  
     Test Case Purpose:
-        The purpose of this test case is to xxxx...
+        Test Purpose: This will verify the water sensed condition for the Water Overflow/Drain Sense. The decision point of whether 
+        the sensor is submerged or not will be at 150K Ohms +/- 10%. If the resistance to chassis ground is greater than 150k Ohms, 
+        then normal operation is assumed. If the resistance to chassis common is continuously less than 150k Ohms for at least 45 
+        seconds, then water sensed condition will be logged and responded to. If the fault is present for less than 45 seconds, it 
+        will be ignored. 
+
+
+    The steps are as follows:
+        1. If board is not powered up, do so and wait approx. 20 sec for board to record the sensor readings. Read CDS_TEMP which should be around whatever room temperature is at the time.  
+        2. Set CDS_TEMR to 100k ohms. Wait for 45 seconds to allow for water sensed condition to be logged
+        3. Verify water sensed condition is present and verify control board sets XXXX_X(X) Water Sensed Fault.
+        4. RESETDEV to 1 to clear all forced objects.
  
     Args:
         bench_test: Boolean variable to run bench testing and not worry about system being present
@@ -48,12 +59,12 @@ def tc_xxxx(bench_test, log_config, log_lock, response_que, econet_write_obj_que
         tuple (see error codes defined above)
  
     Objects used:
-        Read: N/A
-        Written: N/A
+        Read: CDS_TEMP, 
+        Written: CDS_TEMR, RESETDEV
  
-    User input required: xxxx
+    User input required: no
  
-    Error Injection: xxxx
+    Error Injection: no
  
     Test Group: xxxx
  
