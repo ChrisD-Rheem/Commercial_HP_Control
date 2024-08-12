@@ -32,7 +32,7 @@ TEST_CASE_VERSION = "01.00.00"
 #use the first def in case of prompt user needed
 #def tc_xxxx(bench_test, log_config, cmd_msg_que, response_que, econet_write_obj_que, econet_read_obj_que, kill_que, prompt_que):
 
-def bb_oat(bench_test, log_config, log_lock, response_que, econet_write_obj_que, econet_read_obj_que, kill_que):
+def hp_st(bench_test, log_config, log_lock, response_que, econet_write_obj_que, econet_read_obj_que, kill_que):
     """
      Test Case Requirement:
     ACHPC-SR-201 - Space Temperature Sensor
