@@ -21,18 +21,18 @@ from econet_driver.econet_exceptions import ConfigError, CommPortError, ReadObjE
     WriteObjError, TerminateError
 from econet_driver.econet_system_config import ConfigFile
  
-TEST_CASE_NAME = "tc_xxxx"
+TEST_CASE_NAME = "hp_rev"
 TEST_CASE_VERSION = "01.00.00"
  
 #use the first def in case of prompt user needed
-#def tc_xxxx(bench_test, log_config, cmd_msg_que, response_que, econet_write_obj_que, econet_read_obj_que, kill_que, prompt_que):
-def tc_xxxx(bench_test, log_config, log_lock, response_que, econet_write_obj_que, econet_read_obj_que, kill_que):
+#def hp_rev(bench_test, log_config, cmd_msg_que, response_que, econet_write_obj_que, econet_read_obj_que, kill_que, prompt_que):
+def hp_rev(bench_test, log_config, log_lock, response_que, econet_write_obj_que, econet_read_obj_que, kill_que):
     """
      Test Case Requirement:
-    x.x.xxxx - Requirement Description here
+    ACHPC-SR-232 - Reversing Valve RV
  
     Test Case Purpose:
-        The purpose of this test case is to test the functionality of the 
+        The purpose of this test case is to test the functionality of the RV output
  
     Args:
         bench_test: Boolean variable to run bench testing and not worry about system being present
@@ -261,7 +261,7 @@ def main(bench_test = False):
        
  
         # Create and start the test case process
-        test_case_proc = Process(target=tc_xxxx, name=TEST_CASE_NAME,
+        test_case_proc = Process(target=hp_rev, name=TEST_CASE_NAME,
                                  args=(bench_test, log_configs.test_case_logging_config, cmd_msg_que,
                                        response_queue, econet_write_obj_que, econet_read_obj_que, kill_que))
  
