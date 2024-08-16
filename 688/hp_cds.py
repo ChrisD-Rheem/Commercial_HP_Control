@@ -157,7 +157,7 @@ def hp_cds(bench_test, log_config, log_lock, response_que, econet_write_obj_que,
         return_code = (TEST_CASE_NAME, ReturnCodes.TERMINATE_ERROR[1], ReturnCodes.TERMINATE_ERROR[2])
 
     finally:
-        #Ends the read/write process, shut system off(if necessary), and OATisfies locktimr
+        #Ends the read/write process, shut system off(if necessary), and satisfies locktimr
         end_process(tc_logger, bench_test, kill_que, response_que, econet_read_obj_que, econet_write_obj_que, turn_system_off=True)
         response_que.put(return_code)  
         # prompt_que.put(SystemFlags.PROMPTS_FINISHED)
