@@ -38,19 +38,19 @@ def hp_rat(bench_test, log_config, log_lock, response_que, econet_write_obj_que,
     ACHPC-SR-202 - Return Air Temperature Sensor
     Test Case Purpose:  
         This will verify the operating temperature range and resistance range of the Return Air Temperature Sensor. 
-        If the Return Air Temperature is below -40 deg F and a valid thermistor value was previously sensed, then "Sensor Fault XXXXXX" shall be logged. 
-        If the Return Air Temperature is above 250 deg F and a valid thermistor value was previously sensed, then "Sensor Fault XXXXXX" shall be logged. 
-        If the resistance is too low out of range, fault XXXX should be active. 
-        If the resistance is too high out of range, fault XXXX should be active.
+        If the Return Air Temperature is below -40 deg F and a valid thermistor value was previously sensed, then "Sensor Fault 81" shall be logged. 
+        If the Return Air Temperature is above 250 deg F and a valid thermistor value was previously sensed, then "Sensor Fault 72" shall be logged. 
+        If the resistance is too low out of range, fault 81 should be active. 
+        If the resistance is too high out of range, fault 72 should be active.
 
         If resistance is set to 0 ohms, then the Return Air Temperature goes below -40 deg F.
         If resistance is set to 500k ohms, then the Return Air Temperature goes above 250 deg F.
 
     The steps are as follows:
-        1. If board is not powered up, do so and wait approx. 20 sec for board to record the sensor readings. Read RAT_TEMP which should be around whatever room temperature is at the time.  
-        2. Set RAT_TEMR to 0. Verify Base Control board sets fault XXXXXX_X(X) Return Air Temperature Sensor Fault
+        1. If board is not powered up, do so and wait approx. 20 sec for board to record the sensor readings. Read XXX_TEMP which should be around whatever room temperature is at the time.  
+        2. Set XXX_TEMR to 0. Verify Control board sets fault 81 Return Air Temperature Sensor Fault
         3. Reset the microcontroller by setting RESETDEV to 1
-        4. Set RAT_TEMR to 500k ohms and verify the alert XXXXXX_X Return Air Temperature Sensor Fault is set with 8 blinks a pause then 1 blink from red Alarm LED.
+        4. Set XXX_TEMR to 500k ohms and verify the alert 72 Return Air Temperature Sensor Fault is set.
         5. RESETDEV to 1 to clear all forced objects.
 
     Args:
@@ -65,8 +65,8 @@ def hp_rat(bench_test, log_config, log_lock, response_que, econet_write_obj_que,
     Returns:
         tuple (see error codes defined above)
     Objects used:
-        Read: SPT, RAT_TEMP
-        Written: RAT_TEMR, RESETDEV
+        Read: SPT, XXX_TEMP
+        Written: XXX_TEMR, RESETDEV
     User input required: No
     Error Injection: No
     Test Group: CommercialHP
@@ -108,25 +108,25 @@ def hp_rat(bench_test, log_config, log_lock, response_que, econet_write_obj_que,
             tc_logger.log_entry('***** Waiting 60 seconds for board to power back up and detect varying ST resistance')
             time.sleep(60)
 
-        # Verify RAT_TEMP reads room temperature , room temperature value stored in variable room_temp and a tolerance of 3 degrees is applied.
+        # Verify XXX_TEMP reads room temperature , room temperature value stored in variable room_temp and a tolerance of 3 degrees is applied.
         # 3 degrees is an arbritary value, just to verify temperature is approximately room temperature
         tc_logger.log_entry('***** Comparing room temperature setpoint to leaving air temperature')
         room_temp = read_obj(tc_logger, response_que, econet_read_obj_que, "SPT", NetworkAddresses.ECONET_CONTROL_CENTER)
-        read_obj_compare(tc_logger, response_que, econet_read_obj_que, "RAT_TEMP", room_temp, ControlValues.THERMISTOR_TOLERENCE, dest_addr=NetworkAddresses.ECONET_XXXX)
+        read_obj_compare(tc_logger, response_que, econet_read_obj_que, "XXX_TEMP", room_temp, ControlValues.THERMISTOR_TOLERENCE, dest_addr=NetworkAddresses.ECONET_XXXX)
 
-        # Step 2. Setting the value for RAT_TEMR to 0 ohms so that the resistance is too low out of range and this sets the temperature to below -40 deg F
-        # which the reported temperature goes to -40 deg F. -40 deg F is the minimum RAT_TEMP value. LOW_FAIL_RESISTANCE is 0
+        # Step 2. Setting the value for XXX_TEMR to 0 ohms so that the resistance is too low out of range and this sets the temperature to below -40 deg F
+        # which the reported temperature goes to -40 deg F. -40 deg F is the minimum XXX_TEMP value. LOW_FAIL_RESISTANCE is 0
         tc_logger.log_entry(f'***** Setting return air resistance to {ControlValues.LOW_FAIL_RESISTANCE}')
-        write_obj(tc_logger, response_que, econet_write_obj_que, "RAT_TEMR", ControlValues.LOW_FAIL_RESISTANCE, NetworkAddresses.ECONET_XXXX)   
+        write_obj(tc_logger, response_que, econet_write_obj_que, "XXX_TEMR", ControlValues.LOW_FAIL_RESISTANCE, NetworkAddresses.ECONET_XXXX)   
 
-        # Verify fault XX is active due to the resistance and temperature being too low out of range
+        # Verify fault 81 is active due to the resistance and temperature being too low out of range
         if not bench_test:
             tc_logger.log_entry('***** Waiting 15 seconds for potential fault to set')
             time.sleep(15)
-        tc_logger.log_entry('***** Verifying fault XXA is active')
+        tc_logger.log_entry('***** Verifying fault 81A is active')
         alarm_01 = read_obj(tc_logger, response_que, econet_read_obj_que, 'ALARM_01', NetworkAddresses.ECONET_XXXX)[1]
-        if alarm_01[0:6] != "T0XX_A" and not bench_test: #Only want preform the raise this if alarm is not active and if we are not in a benchtest
-            raise ValueCompareError(f'Fault T0XX_A not active')
+        if alarm_01[0:6] != "T081_A" and not bench_test: #Only want preform the raise this if alarm is not active and if we are not in a benchtest
+            raise ValueCompareError(f'Fault T081_A not active')
 
         # Step 3. Reset microcontroller to clear all forced objects
         tc_logger.log_entry('***** Resetting microcontroller')
@@ -137,19 +137,19 @@ def hp_rat(bench_test, log_config, log_lock, response_que, econet_write_obj_que,
         if not bench_test:
            time.sleep(60)
 
-        # Step 4. Setting RAT_TEMR to 500000 ohms so that the resistance is too high out of range and this sets the temperature to above the
-        # 250 deg F which the reported temperature goes to 250 deg F. 250 deg F is the maximum RAT_TEMP value. HIGH_FAIL_RESISTANCE is 500000 ohms
+        # Step 4. Setting XXX_TEMR to 500000 ohms so that the resistance is too high out of range and this sets the temperature to above the
+        # 250 deg F which the reported temperature goes to 250 deg F. 250 deg F is the maximum XXX_TEMP value. HIGH_FAIL_RESISTANCE is 500000 ohms
         tc_logger.log_entry(f'***** Setting return air resistance to {ControlValues.HIGH_FAIL_RESISTANCE}')
-        write_obj(tc_logger, response_que, econet_write_obj_que, "RAT_TEMR", ControlValues.HIGH_FAIL_RESISTANCE, NetworkAddresses.ECONET_XXXX)
+        write_obj(tc_logger, response_que, econet_write_obj_que, "XXX_TEMR", ControlValues.HIGH_FAIL_RESISTANCE, NetworkAddresses.ECONET_XXXX)
 
-        # Verify fault XX is active due to the resistance and temperature being too high out of range
+        # Verify fault 72 is active due to the resistance and temperature being too high out of range
         if not bench_test:
             tc_logger.log_entry('***** Waiting 15 seconds for potential fault to set')
             time.sleep(15)
-        tc_logger.log_entry('***** Verifying fault XXA is active')
+        tc_logger.log_entry('***** Verifying fault 72A is active')
         alarm_01 = read_obj(tc_logger, response_que, econet_read_obj_que, 'ALARM_01', NetworkAddresses.ECONET_XXXX)[1]
-        if alarm_01[0:6] != "T0XX_A"  and not bench_test: #Only want preform the raise this if alarm is not active and if we are not in a benchtest
-            raise ValueCompareError(f'Fault T0XX_A not active')
+        if alarm_01[0:6] != "T072_A"  and not bench_test: #Only want preform the raise this if alarm is not active and if we are not in a benchtest
+            raise ValueCompareError(f'Fault T072_A not active')
 
         # Step 5. Reset microcontroller to clear all forced objects
         tc_logger.log_entry('***** Resetting microcontroller')
