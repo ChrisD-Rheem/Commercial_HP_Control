@@ -43,7 +43,8 @@ def hp_cds(bench_test, log_config, log_lock, response_que, econet_write_obj_que,
         1. If board is not powered up, do so and wait approx. 20 sec for board to record the sensor readings. Read CDS_TEMP which should be around whatever room temperature is at the time.  
         2. Set CDS_TEMR to 100k ohms. Wait for 45 seconds to allow for water sensed condition to be logged
         3. Verify water sensed condition is present and verify control board sets XXXX_X(X) Water Sensed Fault.
-        4. RESETDEV to 1 to clear all forced objects.
+        4. Set XXX_TEMR to 200k ohms. Verify that fault 59 has been removed.
+        5. RESETDEV to 1 to clear all forced objects.
  
     Args:
         bench_test: Boolean variable to run bench testing and not worry about system being present
