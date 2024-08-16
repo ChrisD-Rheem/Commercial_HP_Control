@@ -21,7 +21,7 @@ from econet_driver.econet_exceptions import ConfigError, CommPortError, ReadObjE
     WriteObjError, TerminateError
 from econet_driver.econet_system_config import ConfigFile
  
-TEST_CASE_NAME = "tc_xxxx"
+TEST_CASE_NAME = "hp_thermo"
 TEST_CASE_VERSION = "01.00.00"
  
 #use the first def in case of prompt user needed
@@ -261,7 +261,7 @@ def main(bench_test = False):
        
  
         # Create and start the test case process
-        test_case_proc = Process(target=tc_thermo, name=TEST_CASE_NAME,
+        test_case_proc = Process(target=hp_thermo, name=TEST_CASE_NAME,
                                  args=(bench_test, log_configs.test_case_logging_config, cmd_msg_que,
                                        response_queue, econet_write_obj_que, econet_read_obj_que, kill_que))
  
