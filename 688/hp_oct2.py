@@ -89,9 +89,9 @@ def hp_oct2(bench_test, log_config, log_lock, response_que, econet_write_obj_que
     # Set the return code to default to "GOOD" and only change it if there is a failure
     return_code = (TEST_CASE_NAME, ReturnCodes.ALL_GOOD[1], ReturnCodes.ALL_GOOD[2])
     # Get the filename that is executing and pass this as a parameter to the pre-parser.  The pre-parser will
-    # parse the file and put the relevant STa to the log file
+    # parse the file and put the relevant data to the log file
     file_name = os.path.realpath(__file__)
-    req_trace_csv_STa = pre_parse_util(tc_logger, file_name)
+    req_trace_csv_data = pre_parse_util(tc_logger, file_name)
     # Create the system configuration class, and populate it with values from the sys_config.ini
     system_config = ConfigFile(SystemValues.SYS_CONFIG_FILE)
     try:
@@ -159,29 +159,29 @@ def hp_oct2(bench_test, log_config, log_lock, response_que, econet_write_obj_que
             time.sleep(25)
         #****************************************************************************************************************
        
-        tc_logger.log_entry(f'{req_trace_csv_STa}Pass')
+        tc_logger.log_entry(f'{req_trace_csv_data}Pass')
         tc_logger.log_entry(f'***** *** {TEST_CASE_NAME} successfully completed ***\n')
         return_code = (TEST_CASE_NAME, ReturnCodes.ALL_GOOD[1], ReturnCodes.ALL_GOOD[2])
        
     except ConfigError as config_err:
         tc_logger.log_entry(f'***** *** Fatal error in {TEST_CASE_NAME}: {config_err} ***', logging.CRITICAL)
-        tc_logger.log_entry(f'{req_trace_csv_STa} Fail', logging.CRITICAL)
+        tc_logger.log_entry(f'{req_trace_csv_data} Fail', logging.CRITICAL)
         return_code = (TEST_CASE_NAME, ReturnCodes.INVALID_SYS_CONFIG[1], ReturnCodes.INVALID_SYS_CONFIG[2])
     except ReadObjError as read_obj_err:
         tc_logger.log_entry(f'***** *** Fatal error in {TEST_CASE_NAME}: {read_obj_err} ***', logging.CRITICAL)
-        tc_logger.log_entry(f'{req_trace_csv_STa} Fail', logging.CRITICAL)
+        tc_logger.log_entry(f'{req_trace_csv_data} Fail', logging.CRITICAL)
         return_code = (TEST_CASE_NAME, ReturnCodes.READ_OBJ_ERROR[1], ReturnCodes.READ_OBJ_ERROR[2])
     except WriteObjError as write_obj_err:
         tc_logger.log_entry(f'***** *** Fatal error in {TEST_CASE_NAME}: {write_obj_err} ***', logging.CRITICAL)
-        tc_logger.log_entry(f'{req_trace_csv_STa} Fail', logging.CRITICAL)
+        tc_logger.log_entry(f'{req_trace_csv_data} Fail', logging.CRITICAL)
         return_code = (TEST_CASE_NAME, ReturnCodes.WRITE_OBJ_ERROR[1], ReturnCodes.WRITE_OBJ_ERROR[2])
     except ValueCompareError as value_err:
         tc_logger.log_entry(f'***** *** Fatal error in {TEST_CASE_NAME}: {value_err} ***', logging.CRITICAL)
-        tc_logger.log_entry(f'{req_trace_csv_STa} Fail', logging.CRITICAL)
+        tc_logger.log_entry(f'{req_trace_csv_data} Fail', logging.CRITICAL)
         return_code = (TEST_CASE_NAME, ReturnCodes.VALUE_COMPARE_ERROR[1], ReturnCodes.VALUE_COMPARE_ERROR[2])
     except TerminateError as terminate_err:
         tc_logger.log_entry(f'***** *** Fatal error in {TEST_CASE_NAME}: {terminate_err} ***', logging.CRITICAL)
-        tc_logger.log_entry(f'{req_trace_csv_STa} Fail', logging.CRITICAL)
+        tc_logger.log_entry(f'{req_trace_csv_data} Fail', logging.CRITICAL)
         return_code = (TEST_CASE_NAME, ReturnCodes.TERMINATE_ERROR[1], ReturnCodes.TERMINATE_ERROR[2])
 
     finally:
