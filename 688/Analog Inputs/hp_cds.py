@@ -40,9 +40,9 @@ def hp_cds(bench_test, log_config, log_lock, response_que, econet_write_obj_que,
 
 
     The steps are as follows:
-        1. If board is not powered up, do so and wait approx. 20 sec for board to record the sensor readings. Read CDS_TEMP which should be around whatever room temperature is at the time.  
-        2. Set CDS_TEMR to 100k ohms. Wait for 45 seconds to allow for water sensed condition to be logged
-        3. Verify water sensed condition is present and verify control board sets XXXX_X(X) Water Sensed Fault.
+        1. If board is not powered up, do so and wait approx. 20 sec for board to record the sensor readings. Read XXX_TEMP which should be around whatever room temperature is at the time.  
+        2. Set XXX_TEMR to 100k ohms. Wait for 45 seconds to allow for water sensed condition to be logged
+        3. Verify water sensed condition is present and verify control board sets 59 Water Sensed Fault.
         4. Set XXX_TEMR to 200k ohms. Verify that fault 59 has been removed.
         5. RESETDEV to 1 to clear all forced objects.
  
@@ -60,8 +60,8 @@ def hp_cds(bench_test, log_config, log_lock, response_que, econet_write_obj_que,
         tuple (see error codes defined above)
  
     Objects used:
-        Read: CDS_TEMP, 
-        Written: CDS_TEMR, RESETDEV
+        Read: XXX_TEMP, 
+        Written: XXX_TEMR, RESETDEV
  
     User input required: no
  
@@ -113,19 +113,19 @@ def hp_cds(bench_test, log_config, log_lock, response_que, econet_write_obj_que,
             tc_logger.log_entry('***** Waiting 60 seconds for board to power back up and detect varying CDS resistance')
             time.sleep(60)
 
-        # Step 2. Setting the value for CDS_TEMR to 0 ohms so that the resistance is low enough to trigger a water sensed condition. Wait at
+        # Step 2. Setting the value for XXX_TEMR to 0 ohms so that the resistance is low enough to trigger a water sensed condition. Wait at
         # least 45 seconds to allow for water sensed condtition to be logged. LOW_FAIL_RESISTANCE is 0 ohms.
         tc_logger.log_entry(f'***** Setting CDS resistance to {ControlValues.LOW_FAIL_RESISTANCE}')
-        write_obj(tc_logger, response_que, econet_write_obj_que, "CDS_TEMR", ControlValues.LOW_FAIL_RESISTANCE, NetworkAddresses.ECONET_XXXX)   
+        write_obj(tc_logger, response_que, econet_write_obj_que, "XXX_TEMR", ControlValues.LOW_FAIL_RESISTANCE, NetworkAddresses.ECONET_XXXX)   
 
         # Step 3. Verify water sensed fault XX is active due to the resistance being below the decision point of 150K ohms.
         if not bench_test:
             tc_logger.log_entry('***** Waiting 45 seconds for potential fault to set')
             time.sleep(45)
-        tc_logger.log_entry('***** Verifying fault XXA is active')
+        tc_logger.log_entry('***** Verifying fault 59A is active')
         alarm_01 = read_obj(tc_logger, response_que, econet_read_obj_que, 'ALARM_01', NetworkAddresses.ECONET_XXXX)[1]
         if alarm_01[0:6] != "T0XX_A" and not bench_test: #Only want preform the raise this if alarm is not active and if we are not in a benchtest
-            raise ValueCompareError(f'Fault T0XX_A not active')
+            raise ValueCompareError(f'Fault T059_A not active')
 
         # Step 4. Reset microcontroller to clear all forced objects
         tc_logger.log_entry('***** Resetting microcontroller')
