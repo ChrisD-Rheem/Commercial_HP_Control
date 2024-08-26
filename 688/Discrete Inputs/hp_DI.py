@@ -112,8 +112,8 @@ def hp_DI(bench_test, log_config, log_lock, response_que, econet_write_obj_que, 
             time.sleep(60)
 
         # Step 2. Send 24VAC signal to the input terminal
-        tc_logger.log_entry("***** Sending 24VAC to the HP terminal")
-        write_obj(tc_logger, response_que, econet_write_obj_que, "TE_IMC_5", ArcFlags.RELAY_CLOSED,NetworkAddresses.ECONET_ARC_BOARD)
+        tc_logger.log_entry("***** Sending 24VAC to the LP terminal")
+        write_obj(tc_logger, response_que, econet_write_obj_que, "Ins.Cmpr1LP", ArcFlags.RELAY_CLOSED,NetworkAddresses.ECONET_ARC_BOARD)
 
         # Step 3. Wait for X seconds to verify the signal.
         tc_logger.log_entry('***** Waiting x seconds to allow Climatix IC to detect and verify input signal')
@@ -122,8 +122,31 @@ def hp_DI(bench_test, log_config, log_lock, response_que, econet_write_obj_que, 
         # Step 4. Reset microcontroller to clear all forced objects
         tc_logger.log_entry('***** Resetting microcontroller')
         write_obj(tc_logger, response_que, econet_write_obj_que, 'RESETDEV', SystemValues.YES, NetworkAddresses.ECONET_XXXX)
-        #****************************************************************************************************************
+
+        # Step 2. Send 24VAC signal to the input terminal
+        tc_logger.log_entry("***** Sending 24VAC to the A2L terminal")
+        write_obj(tc_logger, response_que, econet_write_obj_que, "Ins.A2LAlm", ArcFlags.RELAY_CLOSED,NetworkAddresses.ECONET_ARC_BOARD)
+
+        # Step 3. Wait for X seconds to verify the signal.
+        tc_logger.log_entry('***** Waiting x seconds to allow Climatix IC to detect and verify input signal')
+        time.sleep(x)
+
+        # Step 4. Reset microcontroller to clear all forced objects
+        tc_logger.log_entry('***** Resetting microcontroller')
+        write_obj(tc_logger, response_que, econet_write_obj_que, 'RESETDEV', SystemValues.YES, NetworkAddresses.ECONET_XXXX)
        
+        # Step 2. Send 24VAC signal to the input terminal
+        tc_logger.log_entry("***** Sending 24VAC to the XX terminal")
+        write_obj(tc_logger, response_que, econet_write_obj_que, "Ins.Cmpr1LP", ArcFlags.RELAY_CLOSED,NetworkAddresses.ECONET_ARC_BOARD)
+
+        # Step 3. Wait for X seconds to verify the signal.
+        tc_logger.log_entry('***** Waiting x seconds to allow Climatix IC to detect and verify input signal')
+        time.sleep(x)
+
+        # Step 4. Reset microcontroller to clear all forced objects
+        tc_logger.log_entry('***** Resetting microcontroller')
+        write_obj(tc_logger, response_que, econet_write_obj_que, 'RESETDEV', SystemValues.YES, NetworkAddresses.ECONET_XXXX)
+        
         tc_logger.log_entry(f'{req_trace_csv_data}Pass')
         tc_logger.log_entry(f'***** *** {TEST_CASE_NAME} successfully completed ***\n')
         return_code = (TEST_CASE_NAME, ReturnCodes.ALL_GOOD[1], ReturnCodes.ALL_GOOD[2])
